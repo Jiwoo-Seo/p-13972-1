@@ -24,7 +24,7 @@ repositories {
 }
 
 dependencies {
-<<<<<<< HEAD
+
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-web")
@@ -34,7 +34,7 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-=======
+
     implementation("org.springframework.boot:spring-boot-starter-validation")
 
     implementation("org.springframework.boot:spring-boot-starter-web")
@@ -50,7 +50,7 @@ dependencies {
 
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
->>>>>>> c1343cd5e734b4dbe3f32d6ce8cdb2bca2e7f1b6
+
 }
 
 tasks.withType<Test> {
