@@ -1,6 +1,8 @@
 package com.back.domain.post.member.member.service;
 
+import com.back.domain.member.member.entity.Member;
 import com.back.domain.member.member.service.AuthTokenService;
+import com.back.domain.member.member.service.MemberService;
 import com.back.standard.util.Ut;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -22,6 +24,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ActiveProfiles("test")
 @Transactional
 public class AuthTokenServiceTest {
+    @Autowired
+    private MemberService memberService;
     @Autowired
     private AuthTokenService authTokenService;
     private int expireSeconds = 60 * 60 * 24 * 365;
@@ -46,8 +50,13 @@ public class AuthTokenServiceTest {
         Date issuedAt = new Date();
         Date expiration = new Date(issuedAt.getTime() + expireMillis);
 
+        Map<String, Object> payload = Map.of(
+                "name", "Paul",
+                "age", 23
+        );
+
         String jwt = Jwts.builder()
-                .claims(Map.of("name", "Paul", "age", 23)) // 내용
+                .claims(payload) // 내용
                 .issuedAt(issuedAt) // 생성날짜
                 .expiration(expiration) // 만료날짜
                 .signWith(secretKey) // 키 서명
@@ -56,6 +65,17 @@ public class AuthTokenServiceTest {
         assertThat(jwt).isNotBlank();
 
         System.out.println("jwt = " + jwt);
+
+        // 키가 유효한지 테스트
+        Map<String, Object> parsedPayload = (Map<String, Object>) Jwts
+                .parser()
+                .verifyWith(secretKey)
+                .build()
+                .parse(jwt)
+                .getPayload();
+
+        assertThat(parsedPayload)
+                .containsAllEntriesOf(payload);
     }
 
     @Test
@@ -70,5 +90,19 @@ public class AuthTokenServiceTest {
         assertThat(jwt).isNotBlank();
 
         System.out.println("jwt = " + jwt);
+
+
+    }
+
+    @Test
+    @DisplayName("authTokenService.genAccessToken(member);")
+    void t4() {
+        Member memberUser1 = memberService.findByUsername("user1").get();
+
+        String accessToken = authTokenService.genAccessToken(memberUser1);
+
+        assertThat(accessToken).isNotBlank();
+
+        System.out.println("accessToken = " + accessToken);
     }
 }
