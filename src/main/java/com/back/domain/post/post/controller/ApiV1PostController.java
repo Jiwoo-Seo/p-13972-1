@@ -4,7 +4,6 @@ import com.back.domain.member.member.entity.Member;
 import com.back.domain.post.post.dto.PostDto;
 import com.back.domain.post.post.entity.Post;
 import com.back.domain.post.post.service.PostService;
-import com.back.global.exception.ServiceException;
 import com.back.global.rq.Rq;
 import com.back.global.rsData.RsData;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,7 +31,6 @@ public class ApiV1PostController {
     public List<PostDto> getItems() {
         List<Post> items = postService.findAll();
 
-
         return items
                 .stream()
                 .map(PostDto::new) // PostDto로 변환
@@ -55,10 +53,10 @@ public class ApiV1PostController {
             @PathVariable int id
     ) {
         Member actor = rq.getActor();
+
         Post post = postService.findById(id).get();
 
-        if (!actor.equals(post.getAuthor()))
-            throw new ServiceException("403-1", "글 삭제 권한이 없습니다.");
+        post.checkActorCanDelete(actor);
 
         postService.delete(post);
 
@@ -86,6 +84,7 @@ public class ApiV1PostController {
             @Valid @RequestBody PostWriteReqBody reqBody
     ) {
         Member actor = rq.getActor();
+
         Post post = postService.write(actor, reqBody.title, reqBody.content);
 
         return new RsData<>(
@@ -113,10 +112,10 @@ public class ApiV1PostController {
             @Valid @RequestBody PostModifyReqBody reqBody
     ) {
         Member actor = rq.getActor();
+
         Post post = postService.findById(id).get();
 
-        if (!actor.equals(post.getAuthor()))
-            throw new ServiceException("403-1", "글 수정 권한이 없습니다.");
+        post.checkActorCanModify(actor);
 
         postService.modify(post, reqBody.title, reqBody.content);
 
