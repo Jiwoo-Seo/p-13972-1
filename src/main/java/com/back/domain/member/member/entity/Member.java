@@ -36,7 +36,7 @@ public class Member extends BaseEntity {
         return nickname;
     }
 
-    private void setName(String name) {
+    public void setName(String name) {
         this.nickname = name;
     }
 
