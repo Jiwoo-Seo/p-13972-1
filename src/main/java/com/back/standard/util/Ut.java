@@ -1,5 +1,6 @@
 package com.back.standard.util;
 
+import com.back.global.app.AppConfig;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ClaimsBuilder;
 import io.jsonwebtoken.Jwts;
@@ -64,6 +65,21 @@ public class Ut {
                         .getPayload();
             } catch (Exception e) {
                 return null;
+            }
+        }
+    }
+    public static class json {
+
+
+        public static String toString(Object object) {
+            return toString(object, null);
+        }
+
+        public static String toString(Object object, String defaultValue) {
+            try {
+                return AppConfig.getObjectMapper().writeValueAsString(object);
+            } catch (Exception e) {
+                return defaultValue;
             }
         }
     }
