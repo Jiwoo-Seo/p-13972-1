@@ -1,6 +1,6 @@
 package com.back.standard.util;
 
-import com.back.global.app.AppConfig;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ClaimsBuilder;
 import io.jsonwebtoken.Jwts;
@@ -69,7 +69,7 @@ public class Ut {
         }
     }
     public static class json {
-
+        public static ObjectMapper objectMapper;
 
         public static String toString(Object object) {
             return toString(object, null);
@@ -77,7 +77,7 @@ public class Ut {
 
         public static String toString(Object object, String defaultValue) {
             try {
-                return AppConfig.getObjectMapper().writeValueAsString(object);
+                return objectMapper.writeValueAsString(object);
             } catch (Exception e) {
                 return defaultValue;
             }

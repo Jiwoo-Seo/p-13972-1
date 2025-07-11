@@ -5,8 +5,10 @@ import com.back.domain.member.member.dto.MemberWithUsernameDto;
 import com.back.domain.member.member.entity.Member;
 import com.back.domain.member.member.service.MemberService;
 import com.back.global.rq.Rq;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +27,8 @@ public class ApiV1AdmMemberController {
     private final Rq rq;
 
     @GetMapping
+    @Transactional(readOnly = true)
+    @Operation(summary = "다건 조회")
     public List<MemberWithUsernameDto> getItems() {
 
         List<Member> members = memberService.findAll();
@@ -35,6 +39,8 @@ public class ApiV1AdmMemberController {
     }
 
     @GetMapping("/{id}")
+    @Transactional(readOnly = true)
+    @Operation(summary = "단건 조회")
     public MemberWithUsernameDto getItem(
             @PathVariable int id
     ) {
